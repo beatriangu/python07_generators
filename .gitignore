@@ -3,11 +3,13 @@
 # =========================
 __pycache__/
 *.py[cod]
+*.pyo
 
 # =========================
 # Virtual environments
 # =========================
 venv/
+.venv/
 .env
 .env.*
 
@@ -17,12 +19,15 @@ venv/
 *.pdf
 
 # =========================
-# Local learning maps
-# =========================
-MAP.md
-
-# =========================
 # OS / System files
 # =========================
 .DS_Store
 Thumbs.db
+
+# =========================
+# Packaging (optional)
+# =========================
+build/
+dist/
+*.egg-info/
+
