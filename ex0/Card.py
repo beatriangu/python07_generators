@@ -38,4 +38,3 @@ class Card(ABC):
         if not isinstance(available_mana, int):
             raise TypeError("available_mana must be an integer")
         return available_mana >= self.cost
-

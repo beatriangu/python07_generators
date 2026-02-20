@@ -11,6 +11,7 @@ from ex2.EliteCard import EliteCard
 
 
 def main() -> None:
+    print()
     print("=== DataDeck Ability System ===\n")
 
     print("EliteCard capabilities:")

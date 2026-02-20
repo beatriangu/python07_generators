@@ -14,18 +14,12 @@ from .SpellCard import SpellCard
 
 
 def main() -> None:
+    print()
     print("=== DataDeck Deck Builder ===\n")
     print("Building deck with different card types...")
 
     deck = Deck()
 
-    creature = CreatureCard(
-        name="Fire Dragon",
-        cost=5,
-        rarity="Legendary",
-        attack=7,
-        health=5,
-    )
     spell = SpellCard(
         name="Lightning Bolt",
         cost=3,
@@ -38,6 +32,14 @@ def main() -> None:
         rarity="Rare",
         durability=10,
         effect="Permanent: +1 mana per turn",
+    )
+
+    creature = CreatureCard(
+        name="Fire Dragon",
+        cost=5,
+        rarity="Legendary",
+        attack=7,
+        health=5,
     )
 
     deck.add_card(creature)

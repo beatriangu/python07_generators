@@ -19,11 +19,15 @@ class CreatureCard(Card):
         super().__init__(name, cost, rarity)
 
         # Validate: integers (avoid floats/strings) and strictly positive.
-        # Note: bool is a subclass of int in Python, so we exclude it explicitly.
-        if type(attack) is not int or type(health) is not int:
-            raise TypeError("attack and health must be integers")
+        # bool is a subclass of int, so exclude it explicitly.
+        if type(attack) is not int:
+            raise TypeError("attack must be an integer")
+        if type(health) is not int:
+            raise TypeError("health must be an integer")
         if attack <= 0 or health <= 0:
-            raise ValueError("attack and health must be positive integers")
+            raise ValueError(
+                "attack and health must be positive integers"
+            )
 
         self.attack = attack
         self.health = health
@@ -53,4 +57,3 @@ class CreatureCard(Card):
         info = super().get_card_info()
         info.update({"attack": self.attack, "health": self.health})
         return info
-

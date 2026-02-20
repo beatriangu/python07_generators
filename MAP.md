@@ -1,36 +1,80 @@
 🧭 MAP.md — Python Module 07 · DataDeck 🃏
 
-OOP · ABC · Polimorfismo · Herencia múltiple · Patrones · flake8
+OOP · ABC · Polymorphism · Multiple Inheritance · Design Patterns · flake8
 
-Este documento describe la arquitectura del módulo DataDeck.
-Aunque utiliza la metáfora de un juego de cartas, su propósito real es demostrar diseño orientado a contratos, extensibilidad y bajo acoplamiento.
+🎯 Propósito del módulo
 
-🌱 Idea central
+DataDeck no es un juego de cartas.
+
+Es un laboratorio progresivo de arquitectura orientada a contratos que demuestra:
+
+Diseño desacoplado
+
+Polimorfismo real
+
+Composición de capacidades
+
+Aplicación práctica de patrones de diseño
+
+Cumplimiento del principio Open/Closed
+
+Extensibilidad sin modificación del núcleo
+
+El foco no es el dominio (cartas).
+El foco es el diseño.
+
+🌱 Evolución conceptual
 
 El sistema evoluciona desde:
 
-❌ Diferenciar comportamientos mediante if / isinstance
-a
-✅ Delegar comportamiento a través de un contrato común (Card)
+if isinstance(card, CreatureCard):
 
-Principio rector
+hacia:
+
+card.play(game_state)
+
+El comportamiento:
+
+❌ No se decide por tipo
+✅ Se delega al propio objeto mediante contrato
+
+Esto elimina:
+
+if
+
+elif
+
+isinstance
+
+Acoplamiento rígido
+
+🧠 Principio Rector
 
 El motor depende de interfaces, no de implementaciones.
 
-Las subclases encapsulan su propio comportamiento.
+Las subclases encapsulan su comportamiento.
 
-Añadir nuevas cartas no requiere modificar el motor.
+El núcleo del sistema permanece estable.
 
-Esto cumple el principio Open/Closed.
+Nuevas cartas no requieren modificar el motor.
 
-🧩 Arquitectura del sistema
-Relación principal
+✔ Open/Closed Principle
+✔ Bajo acoplamiento
+✔ Alta cohesión
+✔ Extensibilidad real
 
-Deck contiene cartas → composición
+🧩 Arquitectura General
+Relaciones principales
 
-CreatureCard, SpellCard, ArtifactCard extienden Card → herencia
+Deck contiene Card → composición
 
-🎯 Diagrama UML simplificado
+CreatureCard / SpellCard / ArtifactCard → herencia
+
+EliteCard → herencia múltiple controlada
+
+GameEngine → inyección de dependencias (Factory + Strategy)
+
+📐 UML Simplificado
                 +----------------+
                 |     Deck       |
                 +----------------+
@@ -41,7 +85,6 @@ CreatureCard, SpellCard, ArtifactCard extienden Card → herencia
                 | +shuffle()     |
                 +--------+-------+
                          |
-                         | contains
                          v
                 +----------------------+
                 | <<abstract>> Card    |
@@ -57,142 +100,191 @@ CreatureCard, SpellCard, ArtifactCard extienden Card → herencia
                            ^
             ---------------|-------------------
             |              |                  |
-+----------------+  +----------------+  +----------------+
-| CreatureCard   |  | SpellCard      |  | ArtifactCard   |
-+----------------+  +----------------+  +----------------+
-| - attack       |  | - spell_type   |  | - durability   |
-| - health       |  |                |  |                |
-+----------------+  +----------------+  +----------------+
-
+      CreatureCard     SpellCard         ArtifactCard
 🟢 ex0 — Card Foundation
 Objetivo
 
-Definir el contrato base (Card) mediante una Abstract Base Class.
+Definir un contrato formal usando abc.ABC.
 
 Decisiones clave
 
-play() es abstracto para forzar implementación.
+play() es abstracto.
 
-Card define comportamiento común, no implementación.
+No se permite instanciar una carta incompleta.
 
-Se previenen errores en tiempo de instanciación.
+El contrato es explícito.
+
+Resultado
+
+Arquitectura basada en contrato formal, no en convención implícita.
 
 🟡 ex1 — Deck Builder
 Objetivo
 
 Gestionar múltiples tipos de carta sin condicionales por tipo.
 
-Diseño
-
-Deck almacena list[Card].
-
-El método play() se ejecuta de forma polimórfica.
-
-El motor no conoce la clase concreta.
-
-Polimorfismo real:
-
 card = deck.draw_card()
 card.play(game_state)
 
-🟠 ex2 — Ability Layer (Herencia múltiple controlada)
-Objetivo
+El motor no sabe:
 
-Separar capacidades en interfaces independientes.
+Si es criatura
 
-Interfaces:
+Si es spell
+
+Si es artefacto
+
+Solo conoce el contrato Card.
+
+✔ Polimorfismo real
+✔ Eliminación de condicionales por tipo
+✔ Responsabilidad distribuida
+
+🟠 ex2 — Ability Layer
+Problema
+
+Algunas cartas pueden:
+
+Atacar
+
+Defender
+
+Lanzar hechizos
+
+Canalizar magia
+
+Solución
+
+Separar capacidades en interfaces independientes:
 
 Combatable
 
 Magical
 
-Representan capacidades, no identidad.
-
-EliteCard
 class EliteCard(Card, Combatable, Magical)
 
+Estas interfaces representan habilidades, no identidad.
 
-Permite componer comportamiento sin crear clases monolíticas.
+Beneficios
 
-Polimorfismo por capacidad
+Composición flexible
 
-El sistema puede depender de:
+Contratos formales por capacidad
 
-Card
+Polimorfismo por interfaz
 
-Combatable
+Evita clases monolíticas
 
-Magical
+✔ Diseño modular
+✔ Separación de responsabilidades
 
-Sin conocer la clase concreta.
+🟣 ex3 — Engine Layer
 
-🟣 ex3 — Patrones de diseño
-Factory Pattern
+Aquí el sistema pasa de estructura a orquestación.
 
-Centraliza la creación de cartas.
-Reduce acoplamiento y mejora escalabilidad.
+🏭 Abstract Factory
 
-Strategy Pattern
+Responsabilidad:
 
-Permite modificar el comportamiento del motor mediante inyección de estrategia.
+Crear familias coherentes de cartas
 
-El motor no cambia.
-Solo cambia el objeto estrategia.
+Encapsular la lógica de creación
+
+Reducir acoplamiento
+
+El motor depende de CardFactory, no de clases concretas.
+
+♟ Strategy Pattern
+
+Responsabilidad:
+
+Definir cómo se ejecuta un turno
+
+Permitir cambiar comportamiento dinámicamente
+
+engine.configure_engine(factory, strategy)
+
+Cambiar estrategia ≠ modificar motor.
+
+🔥 Por qué Factory + Strategy es potente
+
+Factory controla qué existe
+Strategy controla cómo se usa
+
+Separación clara entre:
+
+Construcción
+
+Comportamiento
+
+✔ Alta configurabilidad
+✔ Bajo acoplamiento
+✔ Escalabilidad limpia
 
 🔴 ex4 — Extensibilidad
 
-Se añade un nuevo contrato:
+Se introduce un nuevo contrato:
 
-Rankable
+class Rankable(ABC):
 
-Permite introducir un sistema de torneos sin modificar módulos anteriores.
+Permite:
 
-Demuestra arquitectura abierta y desacoplada.
+Sistema de torneos
+
+Ranking
+
+Sistema ELO
+
+Métricas adicionales
+
+Sin modificar las capas anteriores.
+
+Demostración real del principio Open/Closed.
 
 🧠 Design Trade-offs
-1️⃣ ABC vs duck typing
+1️⃣ ABC vs Duck Typing
 
 Decisión: usar Abstract Base Classes.
 
-Ventaja:
+Ventajas:
 
 Contrato explícito
 
-Errores detectados antes
+Errores detectados temprano
 
-Mayor claridad estructural
-
-Trade-off:
-
-Mayor rigidez inicial
-
-Más código declarativo
-
-2️⃣ Herencia múltiple vs composición pura
-
-Decisión: usar herencia múltiple para capacidades.
-
-Ventaja:
-
-Modela habilidades como contratos formales
-
-Permite polimorfismo por interfaz
+Arquitectura clara
 
 Trade-off:
 
-Riesgo de complejidad si se abusa
+Mayor formalismo
 
-Necesidad de mantener jerarquía clara
+Más código estructural
 
-3️⃣ Patrones vs simplicidad
+2️⃣ Herencia múltiple vs Composición pura
 
-Decisión: aplicar Factory y Strategy.
+Decisión: herencia múltiple controlada.
 
-Ventaja:
+Ventajas:
+
+Capacidades como contratos formales
+
+Polimorfismo por interfaz
+
+Trade-off:
+
+Requiere entender el MRO
+
+Puede volverse compleja si se abusa
+
+3️⃣ Patrones vs Simplicidad
+
+Decisión: aplicar Factory + Strategy.
+
+Ventajas:
 
 Bajo acoplamiento
 
-Configuración flexible
+Configuración dinámica
 
 Escalabilidad
 
@@ -200,21 +292,25 @@ Trade-off:
 
 Mayor abstracción
 
-Más capas para entender al inicio
+Curva de comprensión inicial
 
-🧠 Conceptos practicados
+🧠 Conceptos dominados
 
 Programación contra interfaces
 
+Inversión de dependencias
+
 Separación de responsabilidades
-
-Bajo acoplamiento
-
-Principios SOLID
 
 Polimorfismo real
 
-Extensibilidad sin modificación
+Herencia múltiple controlada
+
+Patrones clásicos de diseño
+
+Open/Closed Principle
+
+Arquitectura extensible
 
 🧪 Estándares de calidad
 
@@ -229,10 +325,4 @@ Sin condicionales por tipo
 Ejecución modular:
 
 python3 -m exX.main
-
-📌 Resumen ejecutivo
-
-DataDeck demuestra cómo diseñar un sistema extensible basado en contratos formales.
-El motor depende de interfaces, no de implementaciones concretas.
-La arquitectura permite añadir nuevas capacidades y comportamientos sin modificar el núcleo del sistema.
 

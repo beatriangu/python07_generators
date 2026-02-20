@@ -1,263 +1,320 @@
-# 🃏 DataDeck — Python Module 07
-**OOP · Abstract Base Classes · Multiple Inheritance · Polymorphism · Patterns · flake8**
+🃏 DataDeck — Python Module 07
 
-DataDeck is a mini Trading Card Game–style system built to practice **clean,
-defendable OOP design** in Python.
+OOP · Abstract Base Classes · Multiple Inheritance · Polymorphism · Design Patterns · flake8
 
-> **Core idea:** *Same interface, different behavior* — without `if/elif`
-> branching on the card type and without `isinstance()` checks.
+DataDeck is a modular, Trading Card Game–inspired system built to practice clean, extensible, and defendable object-oriented design in Python.
 
-This module is not about making a full game. It’s about building an
-**extensible architecture** where adding new card types or behaviors does not
-break the system.
+Core idea:
+Same interface, different behavior — without if/elif branching and without isinstance() checks.
 
----
+This project is not about building a full game.
+It is about designing an architecture that can grow without breaking.
 
-## 🎯 Learning goals
+🎯 Architectural Goal
+
+Design a system where:
+
+The engine depends on interfaces, not implementations
+
+New card types can be added without modifying existing code
+
+Behavior is delegated to objects, not centralized in conditionals
+
+Code remains lint-clean and explainable
+
+This module demonstrates:
+
+Open/Closed Principle
+
+Low coupling
+
+High cohesion
+
+Interface-based design
+
+Runtime polymorphism
+
+🧠 Key Learning Outcomes
+
 By completing this module, I can:
 
-- Design a shared contract using **Abstract Base Classes (ABC)**
-- Extend behavior via **inheritance** and **method overriding**
-- Demonstrate real **polymorphism** (`card.play(...)` works for all cards)
-- Combine abilities using **multiple inheritance** (interfaces)
-- Organize code as packages and run everything from the repo root
-- Keep code **flake8 clean** and easy to explain in evaluation
+Define explicit contracts using Abstract Base Classes (ABC)
 
----
+Enforce behavior consistency across subclasses
 
-## ✅ Project rules
-- Python **3.10+**
-- **Standard library only**
-- **flake8** compliant
-- Each exercise contains:
-  - required files listed in the subject
-  - an `__init__.py`
-  - a `main.py` demo runnable from the repository root
+Demonstrate real polymorphism (card.play(...))
+
+Combine capabilities using multiple inheritance (interfaces)
+
+Apply Strategy and Factory patterns properly
+
+Organize a Python project as a package
+
+Keep code flake8 clean and evaluation-ready
+
+✅ Project Constraints
+
+Python 3.10+
+
+Standard library only
+
+Fully flake8 compliant
+
+Modular execution from repository root
 
 Run pattern:
-```bash
+
 python3 -m ex0.main
 python3 -m ex1.main
 python3 -m ex2.main
 python3 -m ex3.main
 python3 -m ex4.main
-📦 Repository structure
+📦 Repository Structure
 python07_datadeck/
-├── __init__.py
-├── en.subject7.pdf
 ├── README.md
 ├── MAP.md
-├── ex0/
-│   ├── __init__.py
-│   ├── Card.py
-│   ├── CreatureCard.py
-│   └── main.py
-├── ex1/
-│   ├── __init__.py
-│   ├── SpellCard.py
-│   ├── ArtifactCard.py
-│   ├── Deck.py
-│   └── main.py
-├── ex2/
-│   ├── __init__.py
-│   ├── Combatable.py
-│   ├── Magical.py
-│   ├── EliteCard.py
-│   └── main.py
-├── ex3/
-│   ├── __init__.py
-│   ├── GameStrategy.py
-│   ├── AggressiveStrategy.py
-│   ├── CardFactory.py
-│   ├── FantasyCardFactory.py
-│   ├── GameEngine.py
-│   └── main.py
-└── ex4/
-    ├── __init__.py
-    ├── Rankable.py
-    ├── TournamentCard.py
-    ├── TournamentPlatform.py
-    └── main.py
-🧩 Exercise overview
-🟢 ex0 — Card Foundation (ABC + first concrete card)
-Goal: build the universal card blueprint.
+├── ex0/  # ABC foundation
+├── ex1/  # Polymorphism in collections
+├── ex2/  # Multiple inheritance (interfaces)
+├── ex3/  # Strategy + Factory
+└── ex4/  # Ranking & orchestration
 
-What’s inside
+Each exercise is self-contained and executable.
 
-Card.py → Abstract Base Class defining the shared interface:
+🧩 Exercise Breakdown
+🟢 ex0 — Card Foundation
 
-play(game_state: dict) -> dict (abstract)
+Abstract Base Class + First Concrete Implementation
 
-get_card_info() -> dict (concrete)
+Goal
 
-is_playable(available_mana: int) -> bool (concrete)
+Create a universal contract for all card types.
 
-CreatureCard.py → first concrete implementation:
+Core Design
 
-adds attack and health
+Card (ABC):
 
-implements play(...)
+play(game_state) → abstract
 
-adds attack_target(...) for combat demo
+get_card_info() → shared implementation
 
-What it demonstrates
+is_playable() → shared validation logic
 
-ABC enforces consistency: all card types must implement play()
+CreatureCard:
 
-Subclasses can extend the model without breaking the contract
+Adds attack and health
+
+Implements play()
+
+Extends behavior without breaking the contract
+
+What It Demonstrates
+
+Contracts prevent incomplete implementations
+
+Subclasses define behavior
+
+The system depends on abstraction
 
 Run:
 
 python3 -m ex0.main
-🟡 ex1 — Deck Builder (polymorphism in action)
-Goal: store multiple card types in the same deck and treat them uniformly.
+🟡 ex1 — Deck Builder
 
-What’s inside
+Polymorphism in Action
 
-SpellCard.py → concrete card that resolves spell effects
+Goal
 
-ArtifactCard.py → concrete card with durability + activation behavior
+Store multiple card types in the same collection and treat them uniformly.
 
-Deck.py → management class:
+Design
 
-add_card(card)
-
-remove_card(card_name)
-
-shuffle()
-
-draw_card()
-
-get_deck_stats()
-
-What it demonstrates
-
-Deck stores Card references, not “types”
-
-Polymorphism happens here:
+Deck stores Card references, not concrete types.
 
 card = deck.draw_card()
+card.play(game_state)
 
-card.play(game_state) executes the correct overridden method at runtime
+The deck does not know:
+
+If it’s a creature
+
+If it’s a spell
+
+If it’s an artifact
+
+Only the contract matters.
+
+Demonstrates
+
+Runtime polymorphism
+
+Removal of conditional branching
+
+Distributed responsibility
 
 Run:
 
 python3 -m ex1.main
-🔵 ex2 — Ability Layer (multiple interfaces)
-Goal: combine multiple abilities using multiple inheritance (interfaces).
+🔵 ex2 — Ability Layer
 
-What’s inside
+Multiple Interfaces, Controlled Multiple Inheritance
 
-Combatable.py → abstract combat interface:
+Problem
 
-attack(target) -> dict
+Some cards can:
 
-defend(incoming_damage: int) -> dict
+Attack
 
-get_combat_stats() -> dict
+Defend
 
-Magical.py → abstract magic interface:
+Cast spells
 
-cast_spell(spell_name: str, targets: list) -> dict
+Channel mana
 
-channel_mana(amount: int) -> dict
+Solution
 
-get_magic_stats() -> dict
+Separate capabilities into independent interfaces:
 
-EliteCard.py → multiple inheritance:
+Combatable
 
-Card + Combatable + Magical
+Magical
 
-implements all required methods
+class EliteCard(Card, Combatable, Magical)
 
-What it demonstrates
+These represent capabilities, not identity.
 
-One object can provide multiple capabilities (combat + magic)
+Demonstrates
 
-Still keeps the same card contract: it can be played as a Card
+Multiple inheritance used intentionally
+
+Interface-driven design
+
+Modular capability composition
 
 Run:
 
 python3 -m ex2.main
-🟣 ex3 — Strategy + Factory (design patterns)
-Goal: make gameplay behavior configurable and card creation extensible.
+🟣 ex3 — Strategy + Factory
 
-What’s inside
+Behavior Configuration + Object Creation Abstraction
 
-Strategy:
+Strategy Pattern
 
-GameStrategy (interface)
+Encapsulates turn execution logic.
 
-AggressiveStrategy (one concrete strategy)
+engine.configure_engine(factory, strategy)
 
-Factory:
+Changing strategy ≠ modifying engine.
 
-CardFactory (interface)
+Abstract Factory Pattern
 
-FantasyCardFactory (one concrete factory)
+Encapsulates card creation logic.
 
-GameEngine coordinates strategy + factory behavior
+The engine depends on CardFactory, not concrete classes.
 
-What it demonstrates
+Why This Matters
 
-Strategy pattern: change behavior without changing the engine
+Factory controls what exists
 
-Factory pattern: create families of cards without coupling
+Strategy controls how it behaves
+
+Separation of:
+
+Construction
+
+Behavior
+
+Orchestration
 
 Run:
 
 python3 -m ex3.main
-🔴 ex4 — Ranking & Tournament (interfaces + orchestration)
-Goal: simulate a simple tournament platform with ranking behavior.
+🔴 ex4 — Ranking & Tournament
 
-What’s inside
+Interfaces + System Orchestration
 
-Rankable.py → ranking interface
+Goal
 
-TournamentCard.py → card with ranking capability
+Introduce ranking capability without modifying the core system.
 
-TournamentPlatform.py → orchestrates tournaments and ranking flow
+Rankable defines ranking behavior.
 
-What it demonstrates
+TournamentCard implements it.
 
-Interfaces allow scalable systems (cards can participate if rankable)
+TournamentPlatform orchestrates tournament flow.
 
-Clean orchestration: platform logic stays separate from card logic
+Demonstrates
+
+Interface-driven scalability
+
+ELO-based ranking logic
+
+Orchestration separated from entity logic
 
 Run:
 
 python3 -m ex4.main
-🧠 Defense-ready explanations
+🧠 Defense-Ready Explanations
 Where is polymorphism?
-Deck and each main.py interact with cards through the same method:
+
+Everywhere this appears:
 
 card.play(game_state)
 
-Each subclass decides internally what that means:
+The engine never checks type.
 
-Creature summons
+Each subclass defines its own behavior.
 
-Spell resolves effect
+Why avoid if card.type == ...?
 
-Artifact applies passive effect
+Because:
 
-EliteCard mixes abilities
+Behavior belongs inside the object
 
-Why no if card.type == ...?
-Because behavior belongs to the object itself.
-If the deck needs type-checking, the design is leaking.
+Type-checking breaks Open/Closed
+
+It centralizes logic and increases coupling
 
 How do you extend the system?
-Add a new card class that inherits from Card and implements play().
-If needed, add an interface (like Magical) and implement it.
-The rest of the system should work without modification.
+
+Create a new subclass of Card
+
+Implement play()
+
+Optionally implement additional interfaces
+
+No engine modification required
+
+That is extensibility by design.
 
 🧪 Linting
-Run from the repository root:
+
+Run from repository root:
 
 flake8
+
+All exercises are flake8 compliant.
+
+🏗 Architectural Summary
+
+DataDeck demonstrates:
+
+Programming to interfaces
+
+Dependency inversion
+
+Controlled multiple inheritance
+
+Pattern application with purpose
+
+Open/Closed Principle in practice
+
+Clean, explainable, scalable OOP design
+
+This is not a card game.
+
+It is an architecture exercise.
+
 👤 Author
+
 Bea
-
-
-

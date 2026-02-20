@@ -42,9 +42,8 @@ def main() -> None:
     print("Playable:", creature.is_playable(available_mana))
     print()
 
-    print("Abstract Base Class pattern successfully demonstrated.\n")
+    print("Abstract pattern successfully demonstrated!\n")
 
 
 if __name__ == "__main__":
     main()
-
