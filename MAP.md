@@ -99,13 +99,11 @@ GitHub en bloques de código:
 
 ---
 
-# Copia/pega este “bloque mínimo” de prueba
-Pega esto en tu `MAP.md`, súbelo, refresca GitHub y mira si ya se ve bien:
 
-```md
+```m
 ## 🏗 Diagrama estructural
 
-```text
+```
 +----------------+
 |     Deck       |
 +----------------+
