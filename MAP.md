@@ -74,32 +74,6 @@ EliteCard → herencia múltiple controlada
 GameEngine → inyección de dependencias (Factory + Strategy)
 
 
-⚠️ Ojo:  
-- Tiene que haber **una línea vacía antes** del bloque.
-- Y **una línea vacía después** del bloque.
-- Usa `text` o nada (pero `text` suele ir bien).
-
-## 2) Evita comillas triples sueltas (`"""`)
-En tu texto original vi que tienes `"""` alrededor del diagrama.  
-En Markdown eso **no es un bloque**, y GitHub lo deja como texto normal → se rompe.
-
-✅ Reemplaza cualquier `"""` por el bloque de código con backticks.
-
-## 3) Revisa que no hayas “anidado” backticks dentro de otro bloque
-Si en tu archivo ya estabas dentro de un bloque ``` y vuelves a poner ``` dentro, GitHub se lía y lo deja mal.
-
-✅ Solución rápida: asegúrate de que el bloque del diagrama es el único con ``` en esa zona.
-
-## 4) Fuerza fuente monoespaciada + evita wrap
-GitHub en bloques de código:
-- usa monoespaciada ✅
-- **no debería** hacer wrap normalmente, pero si el contenedor es estrecho, puede verse raro en móvil.
-
-✅ Recomendación: mantén el diagrama con un ancho razonable (o acepta que en móvil se verá con scroll horizontal).
-
----
-
-
 ```md
 ## 🏗 Diagrama estructural
 
